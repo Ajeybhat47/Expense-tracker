@@ -1,0 +1,7 @@
+sudo ss -lptn 'sport = :5432'
+ sudo kill -9  2756
+
+
+
+sudo aa-remove-unknown
+sudo docker rm -f $(sudo docker ps -a -q)
