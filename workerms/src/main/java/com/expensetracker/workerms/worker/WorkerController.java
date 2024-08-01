@@ -19,8 +19,8 @@ public class WorkerController {
         return ResponseEntity.ok(workers);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getWorkerById(@PathVariable Long id) {
+    @GetMapping(params = "id")
+    public ResponseEntity<?> getWorkerById(@RequestParam Long id) {
         try {
             Worker worker = workerService.getWorkerById(id);
             return ResponseEntity.ok(worker);
@@ -39,8 +39,8 @@ public class WorkerController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateWorker(@PathVariable Long id, @RequestBody Worker workerDetails) {
+    @PutMapping
+    public ResponseEntity<?> updateWorker(@RequestParam Long id, @RequestBody Worker workerDetails) {
         try {
             Worker updatedWorker = workerService.updateWorker(id, workerDetails);
             return ResponseEntity.ok(updatedWorker);
@@ -51,8 +51,8 @@ public class WorkerController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteWorker(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<?> deleteWorker(@RequestParam Long id) {
         try {
             workerService.deleteWorker(id);
             return ResponseEntity.noContent().build();
