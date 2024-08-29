@@ -11,6 +11,7 @@ public class WorkDTO {
     private Integer days;
     private Integer totalWorkers;
     private BigDecimal salary;
+    private BigDecimal amountPaid;
     private WorkerDTO leadWorker; // Use WorkerDTO instead of Long
     private Date startDate;
     private Date endDate;
@@ -94,5 +95,13 @@ public class WorkDTO {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public BigDecimal getAmountPaid() {
+        return amountPaid;
+    }
+
+    public void setAmountPaid(BigDecimal amountPaid) {
+        this.amountPaid = amountPaid;
     }
 }

@@ -5,6 +5,7 @@ import com.expensetracker.workms.work.Work;
 import com.expensetracker.workms.exception.ResourceNotFoundException;
 import jakarta.ws.rs.BadRequestException;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface WorkService {
@@ -20,4 +21,8 @@ public interface WorkService {
     void deleteWork(Long id) throws ResourceNotFoundException;
 
     List<WorkDTO> getWorksByWorkerId(Long workerId);
+
+    WorkDTO updateWorkAmount(Long id, BigDecimal amount);
 }
+
+

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -57,6 +58,26 @@ public class WorkController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (BadRequestException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}/amount")
+    public ResponseEntity<?> updateWorkAmountPaid(@PathVariable Long id, @RequestParam BigDecimal amount) {
+        try {
+            WorkDTO updatedWork = workService.updateWorkAmount(id, amount);
+            return ResponseEntity.ok(updatedWork);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/worker/{workerId}")
+    public ResponseEntity<?> getWorksByWorkerId(@PathVariable Long workerId) {
+        try {
+            List<WorkDTO> works = workService.getWorksByWorkerId(workerId);
+            return ResponseEntity.ok(works);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

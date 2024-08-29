@@ -1,5 +1,6 @@
-package com.expensetracker.workms.work.impimentation;
+package com.expensetracker.workms.work.implimentation;
 
+import com.expensetracker.workms.messaging.RabbitMQProducer;
 import com.expensetracker.workms.work.Work;
 import com.expensetracker.workms.work.WorkRepository;
 import com.expensetracker.workms.work.WorkService;
@@ -7,7 +8,6 @@ import com.expensetracker.workms.work.client.WorkerClientService;
 import com.expensetracker.workms.work.dto.WorkDTO;
 import com.expensetracker.workms.exception.ResourceNotFoundException;
 import com.expensetracker.workms.work.dto.WorkerDTO;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.ws.rs.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,10 @@ public class WorkServiceImpl implements WorkService {
 
     @Autowired
     private WorkerClientService workerClientService;
+
+    @Autowired
+    private RabbitMQProducer rabbitMQProducer;
+
 
     @Retry(name = "workerbreaker")
     public List<WorkDTO> getAllWorks() {
@@ -62,10 +66,26 @@ public class WorkServiceImpl implements WorkService {
 
     @Override
     public List<WorkDTO> getWorksByWorkerId(Long workerId) {
-        return List.of();
+        List<Work> works = workRepository.findByLeadWorkerId(workerId);
+        return works.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public WorkDTO updateWorkAmount(Long id, BigDecimal amount) {
+        Work existingWork = workRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Work not found with id " + id));
+
+        existingWork.setAmountPaid(amount);
+        workRepository.save(existingWork);
+
+        String message = "UpdatePaid:" + existingWork.getLeadWorkerId() + ":" + amount;
+        rabbitMQProducer.sendMessage(message);
+
+        return convertToDTO(existingWork);
     }
 
     private void validateWork(Work work) {
+
         if (work.getName() == null || work.getName().trim().isEmpty()) {
             throw new BadRequestException("Name cannot be null or empty");
         }
@@ -92,6 +112,10 @@ public class WorkServiceImpl implements WorkService {
             if (work.getStartDate().after(work.getEndDate())) {
                 throw new BadRequestException("Start date must be before end date");
             }
+        }
+
+        if(work.getAmountPaid() == null){
+            work.setAmountPaid(BigDecimal.ZERO);
         }
     }
 
@@ -134,6 +158,7 @@ public class WorkServiceImpl implements WorkService {
         dto.setDays(work.getDays());
         dto.setTotalWorkers(work.getTotalWorkers());
         dto.setSalary(work.getSalary());
+        dto.setAmountPaid(work.getAmountPaid());
 
         WorkerDTO leadWorkerDTO = workerClientService.getWorkerById(work.getLeadWorkerId());
         dto.setLeadWorker(leadWorkerDTO);
@@ -152,6 +177,7 @@ public class WorkServiceImpl implements WorkService {
         work.setDays(dto.getDays());
         work.setTotalWorkers(dto.getTotalWorkers());
         work.setSalary(dto.getSalary());
+        work.getAmountPaid();
 
         if (dto.getLeadWorker() != null && dto.getLeadWorker().getWorkerId() != null) {
             work.setLeadWorkerId(dto.getLeadWorker().getWorkerId());

@@ -24,6 +24,8 @@ public class Work {
 
     private Integer totalWorkers;
 
+    private BigDecimal AmountPaid;
+
     @Column(nullable = false)
     private BigDecimal salary;
 
@@ -131,5 +133,22 @@ public class Work {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public BigDecimal getAmountPaid() {
+        return AmountPaid;
+    }
+
+    public void setAmountPaid(BigDecimal AmountPaid) {
+        if (AmountPaid == null) this.AmountPaid = BigDecimal.valueOf(0);
+
+        else {
+            if (AmountPaid.compareTo(BigDecimal.ZERO) < 0) {
+                throw new IllegalArgumentException("AmountPaid cannot be null or negative");
+            }
+
+            this.AmountPaid = AmountPaid;
+
+        }
     }
 }
