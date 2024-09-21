@@ -1,4 +1,4 @@
-# Farmer's Work and Expense Tracker Microservice
+# Expense Tracker Microservice
 
 This is a **personalized microservice-based application** for farmers to efficiently manage and track work tasks, associated workers, and expenses. It helps monitor the day-to-day activities of workers, track completed tasks, and store expense information. The system is composed of several microservices, each responsible for distinct features such as day tracking, worker management, and configuration.
 
