@@ -1,40 +1,83 @@
-# Expense Tracker Microservice
+# Farmer's Work and Expense Tracker Microservice
 
-This project is an **Expense Tracker** microservice that helps manage and monitor personal finances efficiently. It is designed using a microservices architecture and includes RESTful APIs for data interaction. The microservices communicate with each other through a service registry, and an API Gateway is configured for load balancing and API request management.
+This is a **personalized microservice-based application** for farmers to efficiently manage and track work tasks, associated workers, and expenses. It helps monitor the day-to-day activities of workers, track completed tasks, and store expense information. The system is composed of several microservices, each responsible for distinct features such as day tracking, worker management, and configuration.
 
 ## Features
 
-- **Microservice-based architecture**: Each component is a standalone service, promoting scalability and flexibility.
-- **Expense tracking**: Provides a set of RESTful APIs to create, read, update, and delete expense records.
-- **API Gateway**: Manages API requests and optimizes performance with load balancing.
-- **Service registry**: Ensures efficient communication between microservices.
-- **PostgreSQL integration**: Uses PostgreSQL for persistent and efficient data storage.
-- **Dockerized deployment**: Each service is containerized with Docker for easy deployment and scaling.
+- **Microservice-based architecture**: Allows each service to be independently developed, deployed, and scaled.
+- **Day Tracking Service**: Tracks the work done by a worker on a particular day.
+- **Worker Management**: Manages the workers, their tasks, and performance.
+- **Expense Tracking**: Provides the ability to log and monitor daily expenses for workers and tasks.
+- **API Gateway**: Centralized entry point for handling API requests across microservices.
+- **Config Server**: Centralized configuration management for all microservices.
+- **Service Registry**: Dynamic discovery of services, ensuring smooth communication between microservices.
+- **PostgreSQL integration**: All microservices use PostgreSQL as the database for data persistence.
+- **Dockerized deployment**: Easy deployment with Docker, enabling each microservice to run in its container.
 
-## Tools & Technologies
+## Microservices Overview
 
-- **Spring Boot**: Microservice framework for building RESTful APIs.
-- **PostgreSQL**: Database for storing and managing expense data.
-- **Docker**: Containerization of services for simplified deployment.
-- **API Gateway**: Centralized entry point for managing and routing API requests.
-- **Service Registry (Eureka/Consul)**: Manages microservice discovery and communication.
-- **Load Balancing**: Distributes incoming API requests for improved performance and reliability.
+1. **ConfigServer**: Provides centralized configuration management for the entire system.
+2. **DayTrackingms**: Manages the records of workers and the tasks they perform on specific days.
+3. **Workerms**: Handles the management of worker profiles, messaging, and tracking of assigned work.
+4. **Workms**: Stores information about different work activities and provides APIs for creating, updating, and managing these activities.
+5. **API Gateway**: Routes requests to appropriate microservices while ensuring load balancing and performance optimization.
+6. **Service Registry**: Facilitates service discovery, allowing microservices to communicate seamlessly.
 
-## Architecture
+## Project Structure
 
-This project is composed of multiple microservices working together:
-
-1. **Expense Service**: Manages expense-related operations, such as creating, updating, and deleting expenses.
-2. **API Gateway**: Routes API requests to the correct microservice and handles load balancing.
-3. **Service Registry**: Maintains a list of active services for dynamic discovery and communication.
-
-Each microservice is deployed within its own Docker container, ensuring they are isolated and scalable independently.
-
-## Installation
-
-Follow these steps to set up the Expense Tracker Microservice:
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/expense-tracker-microservice.git
-   cd expense-tracker-microservice
+```text
+.idea/
+configServer/
+ ├── src/
+ │   └── main/
+ │       └── java/com/expensetracker/configServer/
+ │           ├── ConfigServerApplication.java
+ │       └── resources/
+ │   └── test/
+ ├── pom.xml
+dayTrackingms/
+ ├── src/
+ │   └── main/
+ │       └── java/com/expensetracker/dayTrackingms/
+ │           ├── daytracking/
+ │           ├── exception/
+ │           ├── DayTracking.java
+ │           ├── DayTrackingController.java
+ │           ├── DayTrackingRepository.java
+ │           ├── DayTrackingService.java
+ │       └── resources/
+ │   └── test/
+ ├── pom.xml
+gateway/
+ ├── src/
+ │   └── main/
+ │       └── java/com/expensetracker/gateway/
+ │           ├── GatewayApplication.java
+ │       └── resources/
+ │   └── test/
+ ├── pom.xml
+service-reg/
+ ├── src/
+ ├── pom.xml
+workerms/
+ ├── src/
+ │   └── main/
+ │       └── java/com/expensetracker/workerms/
+ │           ├── messaging/
+ │           ├── worker/
+ │           ├── WorkermsApplication.java
+ │       └── resources/
+ │   └── test/
+ ├── pom.xml
+workms/
+ ├── src/
+ │   └── main/
+ │       └── java/com/expensetracker/workms/
+ │           ├── exception/
+ │           ├── messaging/
+ │           ├── work/
+ │           ├── WorkmsApplication.java
+ │       └── resources/
+ │   └── test/
+ ├── pom.xml
+compose.yaml
