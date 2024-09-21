@@ -12,7 +12,6 @@ This is a **personalized microservice-based application** for farmers to efficie
 - **Config Server**: Centralized configuration management for all microservices.
 - **Service Registry**: Dynamic discovery of services, ensuring smooth communication between microservices.
 - **PostgreSQL integration**: All microservices use PostgreSQL as the database for data persistence.
-- **Dockerized deployment**: Easy deployment with Docker, enabling each microservice to run in its container.
 
 ## Microservices Overview
 
